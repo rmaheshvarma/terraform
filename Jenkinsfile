@@ -31,11 +31,11 @@ pipeline {
 
         stage('Plan') {
             steps {
-                sh 'pwd;cd terraform/basic-ec2-terrafrom ; terraform init -input=false'
-                sh 'pwd;cd terraform/basic-ec2-terrafrom ; terraform workspace new ${environment}'
-                sh 'pwd;cd terraform/basic-ec2-terrafrom ; terraform workspace select ${environment}'
-                sh "pwd;cd terraform/basic-ec2-terrafrom ;terraform plan -input=false -out tfplan "
-                sh 'pwd;cd terraform/basic-ec2-terrafrom ;terraform show -no-color tfplan > tfplan.txt'
+                sh 'pwd;cd terraform/basic-vpc-creting-terraform ; terraform init -input=false'
+                sh 'pwd;cd terraform/basic-vpc-creting-terraform ; terraform workspace new ${environment}'
+                sh 'pwd;cd terraform/basic-vpc-creting-terraform ; terraform workspace select ${environment}'
+                sh "pwd;cd terraform/basic-vpc-creting-terraform ;terraform plan -input=false -out tfplan "
+                sh 'pwd;cd terraform/basic-vpc-creting-terraform ;terraform show -no-color tfplan > tfplan.txt'
             }
         }
         stage('Approval') {
@@ -47,7 +47,7 @@ pipeline {
 
            steps {
                script {
-                    def plan = readFile 'terraform/basic-ec2-terrafrom/tfplan.txt'
+                    def plan = readFile 'terraform/basic-vpc-creting-terraform/tfplan.txt'
                     input message: "Do you want to apply the plan?",
                     parameters: [text(name: 'Plan', description: 'Please review the plan', defaultValue: plan)]
                }
@@ -56,7 +56,7 @@ pipeline {
 
         stage('Apply') {
             steps {
-                sh "pwd;cd terraform/basic-ec2-terrafrom ; terraform apply -input=false tfplan"
+                sh "pwd;cd terraform/basic-vpc-creting-terraform ; terraform apply -input=false tfplan"
             }
         }
     }
